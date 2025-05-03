@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nga Fonte</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500;700&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Cloudflare Web Analytics -->
+    <script
+      defer
+      src="https://static.cloudflareinsights.com/beacon.min.js"
+      data-cf-beacon='{"token": "9d4ff151a68f4a4782e924287c1b049b"}'
+    ></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Montserrat";
+      }
+
+      body {
+        background-image: linear-gradient(
+          230deg,
+          #23262f,
+          #1f2129,
+          #1d1f26,
+          #1b1d23,
+          #16191d,
+          #141619,
+          #121417 60%,
+          #101114 70% 80%,
+          #0d0f11 90%,
+          #0b0c0e
+        );
+        color: #ffffff;
+        text-align: center;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      header {
+        padding-top: 80px;
+        font-size: 2.5rem;
+        font-weight: 800;
+        letter-spacing: 1px;
+      }
+
+      .content {
+        margin: 10px 0px 35px 0px;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+
+      .content button {
+        background-color: #3b3f4b;
+        color: #ffffff;
+        border: none;
+        padding: 15px 30px;
+        font-size: 1.1rem;
+        cursor: pointer;
+        border-radius: 8px;
+        transition: transform 0.2s, background-color 0.3s;
+      }
+
+      .content button:hover {
+        background-color: #505360;
+        transform: scale(1.05);
+      }
+
+      .content button.donate {
+        background-color: #6a1b9a;
+        background-image: linear-gradient(45deg, #0070ba 50%, #ff0800 50%);
+        background-size: 200% 100%;
+        background-position: right bottom;
+        transition: all 0.3s ease;
+      }
+
+      .content button.donate:hover {
+        background-position: left bottom;
+        transform: scale(1.05);
+      }
+
+      /* Modal de escolha */
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.8);
+      }
+
+      .modal-content {
+        background-color: #23262f;
+        margin: 15% auto;
+        padding: 20px;
+        border-radius: 10px;
+        width: 90%;
+        max-width: 500px;
+        min-width: 320px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        animation: modalopen 0.4s;
+      }
+
+      @keyframes modalopen {
+        from {
+          opacity: 0;
+          transform: translateY(-50px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .modal-header h2 {
+        margin: 0;
+        color: #ffffff;
+      }
+
+      .close {
+        color: #aaa;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+
+      .close:hover {
+        color: #fff;
+      }
+
+      .payment-options {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+        width: 100%;
+        padding: 0 20px;
+        box-sizing: border-box;
+      }
+
+      .payment-btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        transition: transform 0.2s;
+        width: 100%;
+        max-width: 280px;
+        min-width: 280px;
+      }
+
+      .payment-btn:hover {
+        transform: scale(1.02);
+      }
+
+      .paypal-btn {
+        background-color: #0070ba;
+      }
+
+      .mbway-btn {
+        background-color: #ff0800;
+      }
+
+      .solana-btn {
+        background: linear-gradient(135deg, #9945ff 0%, #14f195 100%);
+        color: white;
+      }
+
+      .solana-btn:hover {
+        background: linear-gradient(135deg, #7a36cc 0%, #12d185 100%);
+      }
+
+      .region-options {
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+      }
+
+      .region-btn {
+        background: none;
+        border: none;
+        color: #a3a9ff;
+        font-weight: bold;
+        cursor: pointer;
+        padding: 5px 10px;
+      }
+
+      .region-btn.active {
+        border-bottom: 2px solid #a3a9ff;
+      }
+
+      /* Seletor de valores SOL */
+      #solana-amount-selector {
+        margin-bottom: 15px;
+        width: 100%;
+      }
+
+      #solana-amount-selector h4 {
+        color: #a3a9ff;
+        margin-bottom: 10px;
+      }
+
+      .amount-buttons {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .amount-btn {
+        background: #3b3f4b;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .amount-btn:hover {
+        background: #505360;
+      }
+
+      .amount-btn.active {
+        background: #14f195;
+        color: #23262f;
+        font-weight: bold;
+      }
+
+      #custom-amount {
+        width: 100px;
+        padding: 8px;
+        background: #2d303b;
+        color: white;
+        border: 1px solid #3b3f4b;
+        border-radius: 5px;
+        text-align: center;
+      }
+
+      /* QR Code */
+      #solana-qr-container {
+        display: none;
+        text-align: center;
+        margin: 15px auto;
+        width: fit-content;
+      }
+
+      #solanaQrCode {
+        background: white;
+        padding: 10px;
+        border-radius: 8px;
+      }
+
+      /* Histórico de Doações */
+      #donationHistory {
+        max-width: 800px;
+        margin: 0 auto 40px;
+        background: rgba(34, 36, 43, 0.7);
+        padding: 20px;
+        border-radius: 10px;
+      }
+
+      #donationHistory h3 {
+        text-align: center;
+        margin-bottom: 15px;
+      }
+
+      #donationList {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      #donationList th {
+        padding: 10px;
+        background: #2d303b;
+      }
+
+      #donationList td {
+        padding: 10px;
+        border-bottom: 1px solid #3b3f4b;
+      }
+
+      .status-pending {
+        color: #ff5a00;
+      }
+
+      .status-confirmed {
+        color: #14f195;
+      }
+
+      .verify-btn {
+        background: #3b3f4b;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 15px;
+        transition: all 0.3s;
+      }
+
+      .verify-btn:hover {
+        background: #505360;
+      }
+
+      /* Seção de Informações */
+      .info {
+        max-width: 800px;
+        margin: 0 auto 40px;
+        padding: 20px;
+        background-color: rgba(34, 36, 43, 0.9);
+        border-radius: 10px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.5);
+        line-height: 1.6;
+        text-align: justify;
+      }
+
+      .info h3 {
+        text-align: left;
+        margin-bottom: 10px;
+        font-size: 1.2rem;
+        font-weight: 700;
+      }
+
+      .info p {
+        margin-bottom: 15px;
+        word-spacing: -0.05rem;
+        text-align: left;
+        font-weight: 500;
+      }
+
+      footer {
+        padding: 15px;
+        font-size: 0.9rem;
+        color: #aaaaaa;
+      }
+
+      a:-webkit-any-link {
+        color: #a3a9ff;
+      }
+    </style>
+  </head>
+  <body>
+    <header id="title">NGA Source</header>
+
+    <h2 style="margin-bottom: 30px">
+      Fonte oficial NGA caso queira doar para a fonte se manter so clicar no botão abaixo
+    </h2>
+
+    <div class="content">
+      <button id="addBtn" onclick="abrirHydra()">Adicionar ao Hydra</button>
+      <button id="copyBtn" onclick="copiarLink()">Copiar Link</button>
+      <button id="addBtn" onclick="pedidopraFonte()">
+        Pedir um jogo pra fonte
+      </button>
+      <button class="donate" onclick="abrirModalDoacao()">Inativo</button>
+    </div>
+
+    <!-- Modal de doação -->
+    <div id="donationModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Escolha o método de doação</h2>
+          <span class="close" onclick="fecharModal()">&times;</span>
+        </div>
+
+        <div class="region-options">
+          <button
+            class="region-btn active"
+            onclick="mostrarOpcoes('tradicional')"
+          >
+            Tradicional
+          </button>
+          <button class="region-btn" onclick="mostrarOpcoes('crypto')">
+            Criptomoedas
+          </button>
+        </div>
+
+        <div
+          id="opcoes-tradicional"
+          class="payment-options"
+          style="display: flex"
+        >
+          <!-- Alterado para flex -->
+          <button class="payment-btn paypal-btn" onclick="doarPayPal()">
+            <img
+              src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg"
+              alt="PayPal"
+              width="37"
+              height="23"
+            />
+            Doar via PayPal
+          </button>
+          <button class="payment-btn mbway-btn" onclick="doarMBWay()">
+            Doar via MB Way
+          </button>
+        </div>
+
+        <div
+          id="opcoes-crypto"
+          class="payment-options"
+          style="display: none; flex-direction: column"
+        >
+          <div id="solana-amount-selector">
+            <h4>Escolha o valor (SOL):</h4>
+            <div class="amount-buttons">
+              <button class="amount-btn active" onclick="setSolAmount(1)">
+                1 SOL
+              </button>
+              <button class="amount-btn" onclick="setSolAmount(5)">
+                5 SOL
+              </button>
+              <button class="amount-btn" onclick="setSolAmount(10)">
+                10 SOL
+              </button>
+              <input
+                type="number"
+                id="custom-amount"
+                placeholder="Outro valor"
+                min="0.1"
+                step="0.1"
+              />
+            </div>
+          </div>
+
+          <div id="solana-qr-container">
+            <canvas id="solanaQrCode"></canvas>
+            <p style="font-size: 0.8rem; margin-top: 10px">
+              Escaneie com Phantom Wallet
+            </p>
+          </div>
+          <button class="payment-btn solana-btn" onclick="doarViaSolana()">
+            <img
+              src="https://images.seeklogo.com/logo-png/42/1/solana-sol-logo-png_seeklogo-423095.png"
+              alt="Solana"
+              width="20"
+            />
+            Gerar Link/QR Code
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="info">
+      <h3 id="fonteHeader">A Minha Fonte</h3>
+      <p id="fonteInfo">
+        Eu criei esta fonte com o intuito de ajudar a comunidade a ter um acesso
+        facilitado a jogos no launcher do Hydra ao fornecer versões
+        pré-instaladas desses mesmos jogos, eu aceito pedidos de jogos pra se
+        colocar na fonte então se tiver algum pedido basta clicar no botão de
+        pedir um jogo que você será redirecionado para um formulário onde poderá
+        pedir o jogo.
+      </p>
+      <h3 id="linkHeader">Acerca dos Links</h3>
+      <p id="linkInfo">
+        Eu uso maioritariamente links de sites como
+        <a href="https://gamdie.com/">Gamdie</a>,
+        <a href="https://repack-games.com/">Repack-Games</a> &
+        <a href="https://torrent-games.games/">Torrent-Games</a>. Todos eles
+        estão presentes na
+        <a href="https://old.reddit.com/r/Piracy/wiki/megathread/games"
+          >Megathread r/Piracy</a
+        >
+        do Reddit.
+      </p>
+      <h3 id="donateHeader">Doação</h3>
+      <p id="donateInfo">
+        Caso gostes do meu trabalho e queiras fazer uma doação via PayPal, MB
+        Way ou Solana (Phantom), aceito qualquer montante. Todas as doações
+        ajudam a manter a fonte ativa e com novos jogos!
+      </p>
+
+      <footer id="footer">
+        &copy; 2025 NGA Sources (Baseado no HTML criado por Gab7z, todos os
+        créditos vão a ele)
+      </footer>
+    </div>
+
+    <!-- Biblioteca QR Code -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+
+    <script>
+      // Configuração da Carteira
+      const solanaConfig = {
+        address: "Go2kCrGXbyj8rJJgC7MPbDpGVSjTv72fkKvbf51wP8GX",
+        memo: "DOACAO_KAZUMI",
+      };
+
+      // Variável para armazenar o valor selecionado
+      let selectedSolAmount = 1;
+
+      function setSolAmount(amount) {
+        selectedSolAmount = amount;
+        // Atualiza a aparência dos botões
+        document.querySelectorAll(".amount-btn").forEach((btn) => {
+          btn.classList.remove("active");
+        });
+        event.target.classList.add("active");
+        // Limpa o campo personalizado
+        document.getElementById("custom-amount").value = "";
+      }
+
+      function copiarLink() {
+        navigator.clipboard.writeText(
+          "https://github.com/gab7z/fontekazumi.json"
+        );
+        alert("Link Copiado!");
+      }
+
+      function abrirHydra() {
+        window.open(
+          "hydralauncher://install-source?urls=https://github.com/gab7z/NGASources.json"
+        );
+      }
+
+      function pedidopraFonte() {
+        window.open("form.html");
+      }
+
+      // Funções para o modal de doação
+      function abrirModalDoacao() {
+        document.getElementById("donationModal").style.display = "block";
+      }
+
+      function fecharModal() {
+        document.getElementById("donationModal").style.display = "none";
+      }
+
+      // Fechar modal ao clicar fora
+      window.onclick = function (event) {
+        if (event.target == document.getElementById("donationModal")) {
+          fecharModal();
+        }
+      };
+
+      function doarPayPal() {
+        window.open(
+          "https://www.paypal.com/donate/?hosted_button_id=DF2DUYWWQM8TG"
+        );
+        fecharModal();
+      }
+
+      function doarMBWay() {
+        const phoneNumber = "351939224252";
+
+        if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+          window.location.href = `mbway://sendtransfer?phone=${phoneNumber}`;
+
+          setTimeout(() => {
+            window.open(`https://www.mbway.pt`, "_blank");
+          }, 2000);
+        } else {
+          alert(
+            `Para doar via MB Way:\n\n1. Abre a app MB Way no seu telemóvel\n2. Seleciona "Enviar dinheiro"\n3. Insere este número: ${phoneNumber}\n\nObrigado pela tua doação!`
+          );
+        }
+
+        fecharModal();
+      }
+
+      function mostrarOpcoes(regiao) {
+        // Esconde todas as opções
+        document.querySelectorAll(".payment-options").forEach((el) => {
+          el.style.display = "none";
+          // Força o redesenho/reflow antes de mostrar novamente
+          void el.offsetHeight;
+        });
+
+        // Atualiza os botões de região
+        document.querySelectorAll(".region-btn").forEach((btn) => {
+          btn.classList.remove("active");
+        });
+
+        // Mostra a opção selecionada
+        const opcaoSelecionada = document.getElementById(`opcoes-${regiao}`);
+        opcaoSelecionada.style.display = "flex"; // Alterado para flex
+        document
+          .querySelector(`.region-btn[onclick="mostrarOpcoes('${regiao}')"]`)
+          .classList.add("active");
+
+        // Reseta o QR Code se voltar para tradicional
+        if (regiao === "tradicional") {
+          document.getElementById("solana-qr-container").style.display = "none";
+        }
+      }
+
+      // GERAR QR CODE DINÂMICO
+      function gerarQrCode(amount) {
+        const qrData = `solana:${solanaConfig.address}?amount=${amount}&memo=${solanaConfig.memo}`;
+        QRCode.toCanvas(
+          document.getElementById("solanaQrCode"),
+          qrData,
+          {
+            width: 180,
+            margin: 2,
+            color: {
+              dark: "#14F195",
+              light: "#23262f",
+            },
+          },
+          (error) => {
+            if (error) console.error(error);
+          }
+        );
+      }
+
+      // DOAÇÃO VIA SOLANA
+      function doarViaSolana() {
+        // Verifica se foi inserido valor personalizado
+        const customAmount = parseFloat(
+          document.getElementById("custom-amount").value
+        );
+        const amount = customAmount || selectedSolAmount;
+
+        // Validação do valor
+        if (customAmount && (customAmount <= 0 || isNaN(customAmount))) {
+          alert("Por favor insira um valor válido maior que 0!");
+          return;
+        }
+
+        // Gera QR Code com o valor selecionado
+        gerarQrCode(amount);
+        document.getElementById("solana-qr-container").style.display = "block";
+
+        // Tenta abrir o Phantom Wallet
+        window.location.href = `https://phantom.app/ul/v1/transfer?recipient=${solanaConfig.address}&amount=${amount}`;
+
+        // Fallback para copiar manualmente
+        setTimeout(() => {
+          navigator.clipboard
+            .writeText(solanaConfig.address)
+            .then(() => {
+              alert(`Endereço SOL copiado! Você pode enviar ${amount} SOL`);
+            })
+            .catch(() => {
+              prompt(
+                "Copie manualmente seu endereço Solana:",
+                solanaConfig.address
+              );
+            });
+        }, 500);
+      }
+
+      // VERIFICAÇÃO DE DOAÇÕES (SIMULADA)
+      function verificarDoacoes() {
+        alert(
+          "Esta é uma simulação. Na prática, você precisaria:\n\n1. Conectar a uma API da Solana\n2. Verificar transações para seu endereço\n3. Atualizar os status no histórico"
+        );
+
+        // Simulação de confirmação
+        const statusCells = document.querySelectorAll(
+          "#donationList .status-pending"
+        );
+        statusCells.forEach((cell) => {
+          cell.textContent = "✅";
+          cell.className = "status-confirmed";
+        });
+      }
+    </script>
+  </body>
+</html>
